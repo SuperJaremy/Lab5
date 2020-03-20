@@ -1,0 +1,12 @@
+show
+update_id 1
+Linkin Park
+32
+23
+5
+7
+
+PUNK_ROCK
+Meteora
+13
+execute_script C:\Users\mi\IdeaProjects\Lab5\Script_3.txt

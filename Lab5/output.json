@@ -1,0 +1,53 @@
+[
+  {
+    "id": 54267647,
+    "name": "The Beatles",
+    "coordinates": {
+      "x": 12.0,
+      "y": 232
+    },
+    "creationDate": "12.03.2007",
+    "numberOfParticipants": 4,
+    "albumsCount": 17,
+    "establishmentDate": "21.05.1960",
+    "genre": "BRIT_POP",
+    "bestAlbum": {
+      "name": "Yellow Submarine",
+      "length": 13
+    }
+  },
+  {
+    "id": 67563289,
+    "name": "Порнофильмы",
+    "coordinates": {
+      "x": 768.0,
+      "y": 96
+    },
+    "creationDate": "08.11.2011",
+    "numberOfParticipants": 5,
+    "albumsCount": 8,
+    "establishmentDate": "12.09.2008",
+    "genre": "PUNK_ROCK",
+    "bestAlbum": {
+      "name": "В диапазоне между отчаянием и надеждой",
+      "length": 14
+    }
+  },
+  {
+    "id": 565678213,
+    "name": "Mahavishnu Orchestra",
+    "coordinates": {
+      "x": 543.0,
+      "y": 6621
+    },
+    "creationDate": "27.07.2000",
+    "numberOfParticipants": 5,
+    "albumsCount": 10,
+    "establishmentDate": "09.01.1971",
+    "genre": "JAZZ",
+    "bestAlbum": {
+      "name": "Birds of Fire",
+      "length": 10
+    }
+  }
+]
