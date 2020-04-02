@@ -16,5 +16,5 @@ public abstract class Command {
      * @param work
      * @throws NullPointerException
      */
-    public abstract void act(Work work) throws NullPointerException;
+    public abstract void act(Work work) throws NullPointerException, ExitException;
 }

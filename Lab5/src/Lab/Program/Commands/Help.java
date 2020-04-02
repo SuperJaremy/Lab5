@@ -23,7 +23,8 @@ public class Help extends Command {
             i.describe();
             }
         else {
-            System.out.println("В команде не должно быть аргументов");
+            System.out.println("У команды "+name+ " не должно быть аргументов");
+            describe();
             throw new NullPointerException();
         }
     }

@@ -1,5 +1,6 @@
 package Lab.Program.Commands;
 
+import Lab.Program.FileTester;
 import Lab.Program.Work;
 
 import java.nio.file.Paths;
@@ -22,33 +23,49 @@ public class ExecuteScript extends Command{
     }
 
     @Override
-    public void act(Work work) throws NullPointerException {
-        if(!work.getScripts().contains(Paths.get(work.getElement()).hashCode())) {
-            work.getScripts().add(Paths.get(work.getElement()).hashCode());
-            ScriptWork innerWork = new ScriptWork(work.vector, work.date, work.getPathOfJson().toString(), work);
-            innerWork.start();
-            work.setInProcess(innerWork.getInProcess());
-            if(innerWork.getInProcess()) {
-                System.out.println("Скрипт " + innerWork.getPathOfScript() + " выполнен");
-            }
-        }
-        else {
-            System.out.println("Рекурсия в скрипте:" + work.getPathOfScript());
-            System.out.println("Вы хотите зайти в рекурсию? [Y/N]");
-            boolean success = false;
-            Scanner input = new Scanner(System.in);
-            while (!success) {
-                String line = input.nextLine().trim().toUpperCase();
-                if (line.equals("Y")) {
-                    success = true;
-                    ScriptWork innerWork = new ScriptWork(work.vector, work.date, work.getPathOfJson().toString(), work);
+    public void act(Work work) throws NullPointerException, ExitException {
+        if (work.getElement() != null) {
+            if (FileTester.TestFileToRead(Paths.get(work.getElement()))) {
+                if (!work.getScripts().contains(Paths.get(work.getElement()).hashCode())) {
+                    work.getScripts().add(Paths.get(work.getElement()).hashCode());
+                    ScriptWork innerWork = new ScriptWork(work.vector, work.getPathOfJson().toString(), work);
                     innerWork.start();
                     work.setInProcess(innerWork.getInProcess());
-                } else if (line.equals("N")) {
-                    success = true;
-                } else
-                    System.out.println("Данные некорректны. Повторите ввод");
-            }
+                    if (innerWork.getInProcess()) {
+                        System.out.println("Скрипт " + innerWork.getPathOfScript() + " выполнен");
+                    }
+                } else {
+                    System.out.println("Рекурсия в скрипте:" + work.getPathOfScript());
+                    System.out.println("Вы хотите зайти в рекурсию? [Y/N]");
+                    boolean success = false;
+                    Scanner input = new Scanner(System.in);
+                    while (!success) {
+                        DialogBox db = s -> {
+                            if (s.equals("Y")) {
+
+                                return  1;
+                            } else if (s.equals("N")) {
+                                return 0;
+                            } else
+                                System.out.println("Данные некорректны. Повторите ввод");
+                            return -1;
+                        };
+                        int i=db.chat(input);
+                        if(i>-1)
+                            success=true;
+                        if(i>0){
+                            ScriptWork innerWork = new ScriptWork(work.vector, work.getPathOfJson().toString(), work);
+                            innerWork.start();
+                            work.setInProcess(innerWork.getInProcess());
+                        }
+                    }
+
+                }
+            } else
+                throw new NullPointerException();
+        }
+        else{
+            System.out.println("У команды "+ name+" должен быть аргумент");
         }
     }
 }

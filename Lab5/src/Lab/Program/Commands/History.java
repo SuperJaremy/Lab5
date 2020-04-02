@@ -30,7 +30,7 @@ public class History extends Command{
             System.out.println("Конец истории");
         }
         else {
-            System.out.println("В команде не должно быть аргументов");
+            System.out.println("У команды "+name+ " не должно быть аргументов");
             throw new NullPointerException();
         }
     }

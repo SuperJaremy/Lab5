@@ -24,13 +24,15 @@ public class RemoveFirst extends Command {
             if (work.vector.size() != 0) {
                 work.vector.remove(0);
                 System.out.println("Элемент удалён");
-            } else {
+            }
+            else {
                 System.out.println("В коллекции нет элементов");
                 throw new NullPointerException();
             }
         }
         else {
-            System.out.println("В команде не должно быть аргументов");
+            System.out.println("В команде "+name+" не должно быть аргументов");
+            describe();
             throw new NullPointerException();
         }
     }

@@ -1,14 +1,13 @@
 package Lab.Program;
 
 
+import Lab.Program.Commands.DialogBox;
+import Lab.Program.Commands.ExitException;
 
-
-
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Coordinates {
     private Float x;
@@ -20,49 +19,67 @@ public class Coordinates {
     /**
      * Создаёт класс Coordinates из стандартного потока ввода
      */
-    public void fromConsole(){
+    public void fromConsole() throws ExitException {
         Scanner input = new Scanner(System.in);
         System.out.println("Пожалуйста, введите координату x");
         boolean success=false;
         while(!success) {
-            try {
-                x=Float.parseFloat(input.nextLine().trim());
-                if(x<-801){
-                    x=null;
-                    throw new InputMismatchException();
+            DialogBox db = s -> {
+                try {
+                    x=Float.parseFloat(s.trim());
+                    if(x<-801){
+                        x=null;
+                        throw new NullPointerException();
+                    }
+                    return 1;
+                } catch (NullPointerException | NumberFormatException e) {
+                    System.out.println("Координата x должны быть числом не меньше -801");
+                    return -1;
                 }
+            };
+            if(db.chat(input)>0)
                 success=true;
-            } catch (InputMismatchException|NullPointerException | NumberFormatException e) {
-                System.out.println("Данные некорректны. Повторите ввод ещё раз");
-            }
         }
         success=false;
         System.out.println("Пожалуйста, введите координату y");
         while (!success){
-            try{
-                y=Long.parseLong(input.nextLine().trim());
+            DialogBox db = s -> {
+                try{
+                    y=Long.parseLong(s.trim());
+                    return 1;
+                }
+                catch (InputMismatchException|NullPointerException | NumberFormatException e){
+                    System.out.println("Координата y должна быть целым числом");
+                    return -1;
+                }
+            };
+            if(db.chat(input)>0)
                 success=true;
-            }
-            catch (InputMismatchException|NullPointerException | NumberFormatException e){
-                System.out.println("Данные некорректны. Повторите ввод ещё раз");
-            }
         }
     }
 
     /**
-     * Создаёт класс Coordinates из потока BufferedReader reader
-     * @param reader
-     * @throws InputMismatchException
+     * Создаёт класс Coordinates
      * @throws NullPointerException
-     * @throws NumberFormatException
-     * @throws IOException
      */
-        public void fromFile(BufferedReader reader) throws InputMismatchException, NullPointerException, NumberFormatException, IOException {
-            x=Float.parseFloat(reader.readLine().trim());
-            if(x<-801){
-                throw new InputMismatchException();
+        public int fromFile(Vector<String> Contents, int i) throws NullPointerException{
+            try {
+                x = Float.parseFloat(Contents.get(i).trim());
+                if (x < -801) {
+                    System.out.println("Координата x должна быть не меньше -801");
+                    throw new NullPointerException();
+                }
+            }catch (NumberFormatException e){
+                System.out.println("Координата x должна быть числом");
+                throw new NullPointerException();
             }
-            y=Long.parseLong(reader.readLine().trim());
+            try {
+                y = Long.parseLong(Contents.get(i + 1).trim());
+            }
+            catch(NumberFormatException e){
+                System.out.println("Координата y должна быть целым числом");
+            }
+            return i+1;
         }
 
     @Override

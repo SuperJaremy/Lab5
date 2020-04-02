@@ -2,11 +2,13 @@ package Lab.Program;
 
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.InputMismatchException;
+
+import Lab.Program.Commands.DialogBox;
+import Lab.Program.Commands.ExitException;
+
 import java.util.Objects;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Album {
     private String name;
@@ -42,47 +44,86 @@ public class Album {
     /**
      * Создаёт класса Album из стандартного потока ввода
      */
-    public void fromConsole() {
+    public void fromConsole() throws ExitException {
         Scanner input = new Scanner(System.in);
         System.out.println("Пожалуйста, введите название альбома");
-        boolean success;
-        name = input.nextLine().trim();
-        if (name.length() == 0) {
-            name = null;
+        DialogBox db = s -> {
+            if(s.length()==0){
+                name=null;
+            }
+            else {
+                name=s;
+            }
+            return 1;
+        };
+        try {
+            db.chat(input);
         }
+        catch (ExitException e){
+            System.out.println("Введите Y, если это название альбома.");
+            DialogBox db1= s->{
+                if(s.toUpperCase().equals("Y")){
+                    name=s;
+                    return 1;
+                }
+                else{
+                    System.out.println("Повторите ввод ещё раз");
+                    return -1;
+                }
+            };
+            boolean b=false;
+            while(!b) {
+                if (db1.chat(input)>0) {
+                    b = true;
+                }
+            }
+        }
+        boolean success;
         if (name != null) {
             System.out.println("Пожалуйста, введите длительность альбома");
             success = false;
             while (!success) {
-                try {
-                    length = Long.parseLong(input.nextLine().trim());
-                    if (length <= 0)
-                        throw new InputMismatchException();
-                    success = true;
-                } catch (InputMismatchException | NullPointerException | NumberFormatException e1) {
-                    System.out.println("Данные некорректны. Повторите ввод ещё раз");
-                }
+                DialogBox db1 = s -> {
+                    try {
+                        length = Long.parseLong(s.trim());
+                        if (length <= 0)
+                            throw new NullPointerException();
+                        return 1;
+                    } catch (NullPointerException | NumberFormatException e1) {
+                        System.out.println("Длительность альбома должна быть целым положительным числом");
+                        return -1;
+                    }
+                };
+                if(db1.chat(input)>0)
+                    success=true;
             }
         }
     }
 
     /**
-     * Создаёт класс Album из потока Buffered reader reader
-     * @param reader
-     * @throws IOException
+     * Создаёт класс Album
      * @throws NullPointerException
-     * @throws InputMismatchException
      */
-    public void fromFile(BufferedReader reader) throws IOException, NullPointerException, InputMismatchException {
-        name = reader.readLine().trim();
+    public int fromFile(Vector<String> Contents, int i) throws NullPointerException{
+        name = Contents.get(i).trim();
         if (name.length() == 0) {
             name = null;
         }
         if (name != null) {
-            length = Long.parseLong(reader.readLine().trim());
-            if (length <= 0)
-                throw new InputMismatchException();
+            try {
+                length = Long.parseLong(Contents.get(i + 1).trim());
+                if (length <= 0) {
+                    System.out.println("Длина альбома не может быть неположительной");
+                    throw new NullPointerException();
+                }
+                return i+1;
+            }
+            catch(NumberFormatException e){
+                System.out.println("Длина альбома должна быть целым числом");
+                throw new NullPointerException();
+            }
         }
+        return i;
     }
 }
 

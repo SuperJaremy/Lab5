@@ -21,7 +21,8 @@ public class Clear  extends Command{
     @Override
     public void act(Work work) throws NullPointerException {
         if(work.getElement()!=null) {
-            System.out.println("В команде не должно быть аргументов");
+            System.out.println("У команды "+name+" не должно быть аргументов");
+            describe();
             throw new NullPointerException();
         }
         else {

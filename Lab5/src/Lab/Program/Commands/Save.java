@@ -1,15 +1,13 @@
 package Lab.Program.Commands;
 
 import Lab.Program.FileTester;
-import Lab.Program.Hell.MusicBandSerealizer;
+import Lab.Program.Hell.MusicBandSerializer;
 import Lab.Program.MusicBand;
 import Lab.Program.Work;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.nio.file.Files;
 
 /**
@@ -32,10 +30,12 @@ public class Save extends Command {
     public void act(Work work) throws NullPointerException {
         if(work.getElement()==null) {
             if (FileTester.TestFileToWrite(work.getPathOfJson())) {
-                Gson gson = new GsonBuilder().setPrettyPrinting()
-                        .registerTypeAdapter(MusicBand.class, new MusicBandSerealizer()).create();
-                try (Writer writer = new FileWriter(work.getPathOfJson().toFile())) {
-                    writer.write(gson.toJson(work.vector));
+                Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls()
+                        .registerTypeAdapter(MusicBand.class, new MusicBandSerializer()).create();
+                try(BufferedWriter writer= new BufferedWriter(new FileWriter(work.getPathOfJson().toFile())))  {
+                    gson.toJson(work.vector, writer);
+                    writer.flush();
+                    System.out.println("Коллекция сохранена");
                 } catch (IOException e) {
                     System.out.println("Файл не может быть открыт.");
                 }
@@ -44,7 +44,8 @@ public class Save extends Command {
             }
         }
         else {
-            System.out.println("В команде не должно быть аргументов");
+            System.out.println("У команды "+name+ " не должно быть аргументов");
+            describe();
             throw new NullPointerException();
         }
     }

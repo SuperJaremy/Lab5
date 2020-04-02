@@ -3,15 +3,16 @@ package Lab.Program;
 
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
+
+import Lab.Program.Commands.DialogBox;
+import Lab.Program.Commands.ExitException;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static Lab.Program.MusicGenre.list;
 
 public class MusicBand implements Comparable<MusicBand> {
     private Integer id;
@@ -33,46 +34,116 @@ public class MusicBand implements Comparable<MusicBand> {
         creationDate = LocalDate.now();
     }
     public MusicBand(String name){
-        coordinates=new Coordinates();
-        bestAlbum = new Album();
         creationDate = LocalDate.now();
         if(name==null){
             this.name=" ";
-            this.fromConsole();
         }
         else{
-            this.fromConsole();
             this.name=name;
         }
     }
     public MusicBand(Integer id, String name, Coordinates coordinates, LocalDate creationDate, Integer numberOfParticipants, long albumsCount, java.util.Date establishmentDate, MusicGenre genre, Album bestAlbum){
         boolean uniqueID=!ids.contains(id);
-        if(id!=null&&id>0&&coordinates!=null&&coordinates.getX()!=null&&coordinates.getX()>-801&&creationDate!=null&&(numberOfParticipants==null||numberOfParticipants>0)&&albumsCount>0&&genre!=null&&(bestAlbum==null||bestAlbum.getName()!=null&&bestAlbum.getLength()>0)&&uniqueID) {
-            this.id = id;
-            this.name = name;
-            this.coordinates = coordinates;
-            this.creationDate = creationDate;
-            this.numberOfParticipants = numberOfParticipants;
-            this.albumsCount = albumsCount;
-            this.establishmentDate = establishmentDate;
-            this.genre = genre;
-            this.bestAlbum = bestAlbum;
-            ids.add(id);
+        if(id!=null) {
+            if (id > 0) {
+                if (uniqueID) {
+                    this.id = id;
+                }
+                else {
+                    System.out.println("id "+id+" повторяется");
+                    throw new NullPointerException();
+                }
+            }
+            else {
+                System.out.println("id объектов должен быть положительным целым числом." + id+" им не является");
+                throw new NullPointerException();
+            }
         }
-        else {
-            System.out.println("Ошибка в полях объекта");
+        else{
+            System.out.println("Не задан id объекта");
             throw new NullPointerException();
         }
+        if(name!=null&&name.length()!=0)
+            this.name=name;
+        else{
+            System.out.println("У объекта с id "+id+" должно быть имя");
+            throw new NullPointerException();
+        }
+        if(coordinates!=null){
+            if(coordinates.getX()!=null){
+                if(coordinates.getX()>-801)
+                    this.coordinates=coordinates;
+                else{
+                    System.out.println("Координата x объекта с id "+id+"  должна быть больше -801");
+                    throw new NullPointerException();
+                }
+            }
+            else{
+                System.out.println("Координата x объекта с id "+id+"  должна быть задана");
+                throw new NullPointerException();
+            }
+        }
+        else{
+            System.out.println("Координаты объекта с id "+ id+" должны быть заданы");
+            throw new NullPointerException();
+        }
+        if(creationDate!=null)
+            this.creationDate=creationDate;
+        else{
+            System.out.println("Дата создания объекта с id "+ id+" должна быть задана");
+            throw new NullPointerException();
+        }
+        if(numberOfParticipants==null||numberOfParticipants>0){
+            this.numberOfParticipants=numberOfParticipants;
+        }
+        else{
+            System.out.println("Количество участников группы объекта с id "+id+" должно быть либо null, либо целым положительным числом");
+            throw new NullPointerException();
+        }
+        if(albumsCount>0)
+            this.albumsCount=albumsCount;
+        else{
+            System.out.println("Количество альбомов объекта с id "+id+" должно быть целым положительным числом");
+            throw new NullPointerException();
+        }
+        if(genre!=null){
+            this.genre=genre;
+        }
+        else{
+            System.out.println("Жанр объекта с id "+id+" должен быть выбран из списка: ");
+            MusicGenre.list();
+            throw new NullPointerException();
+        }
+       if(bestAlbum==null)
+           this.bestAlbum=null;
+       else if(bestAlbum.getName()!=null){
+           if(bestAlbum.getLength()>0){
+               this.bestAlbum=bestAlbum;
+           }
+           else{
+               System.out.println("Длина альбома объекта с id "+id+" должна быть целым положительным числом");
+               throw new NullPointerException();
+           }
+       }
+       else{
+           System.out.println("У лучшего альбома объекта с id "+id+" должно быть название");
+           throw new NullPointerException();
+       }
+       ids.add(id);
     }
     public int getNumberOfParticipants(){
         return numberOfParticipants;
     }
-    public int getID(){
+    public int getId(){
         return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public static Vector<Integer> getIds() {
+        return ids;
     }
 
     public void setName(String name) {
@@ -148,128 +219,217 @@ public class MusicBand implements Comparable<MusicBand> {
     public int hashCode() {
         return Objects.hash(id, name, coordinates, creationDate, numberOfParticipants, albumsCount, establishmentDate, genre, bestAlbum);
     }
-    public void fromConsole(){
+    public void fromConsole()throws ExitException {
         /**
          * Создаёт класс MusicBand из стандартного потока ввода
          */
         Scanner input = new Scanner(System.in);
         boolean success = false;
-        if(this.name!=null) {
             System.out.println("Пожалуйста, введите имя");
             while (!success) {
+                DialogBox db = s -> {
+                    if(s.length()==0){
+                        System.out.println("У группы должно быть имя. Повторите ввод");
+                        return -1;
+                    }
+                    else {
+                        name=s;
+                        return 1;
+                    }
+                };
                 try {
-                    name = input.nextLine();
-                    name = name.trim();
-                    if (name.length() == 0)
-                        throw new NullPointerException();
-                    success = true;
-                } catch (NullPointerException e) {
-                    System.out.println("Данные некорректны. Повторите ввод ещё раз");
+                    if(db.chat(input)>0)
+                        success=true;
+                }
+                catch (ExitException e){
+                    System.out.println("Введите Y, если это название группы.");
+                    DialogBox db1= s->{
+                        if(s.toUpperCase().equals("Y")){
+                            name=s;
+                            return 1;
+                        }
+                        else{
+                            System.out.println("Повторите ввод ещё раз");
+                            return -1;
+                        }
+                    };
+                    boolean b=false;
+                    while(!b) {
+                        if (db1.chat(input)>0) {
+                            b = true;
+                            success = true;
+                        }
+                    }
                 }
             }
-        }
+            coordinates=new Coordinates();
         coordinates.fromConsole();
         success = false;
         System.out.println("Пожалуйста, введите количество участников");
         while (!success) {
-            try {
-                numberOfParticipants = Integer.parseInt(input.nextLine().trim());
-                if (numberOfParticipants <= 0)
-                    throw new NullPointerException();
+            DialogBox db = s -> {
+                try {
+                    Integer i;
+                    if(s.length()==0)
+                        numberOfParticipants=null;
+                    else {
+                        i = Integer.parseInt(s.trim());
+                        if (i <= 0)
+                            throw new NullPointerException();
+                        numberOfParticipants = i;
+                    }
+                    return 1;
+                } catch (NullPointerException | NumberFormatException e) {
+                    System.out.println("Количество участников должно быть целым положительным числом. Повторите ввод");
+                    return -1;
+                }
+            };
+            if(db.chat(input)>0){
                 success=true;
-            } catch (InputMismatchException | NullPointerException | NumberFormatException e) {
-                System.out.println("Данные некорректны. Повторите ввод ещё раз");
             }
         }
         success=false;
         System.out.println("Пожалуйста, введите количество альбомов");
         while (!success) {
-            try {
-                albumsCount = Long.parseLong(input.nextLine().trim());
-                if (albumsCount <= 0)
-                    throw new NullPointerException();
+            DialogBox db= s -> {
+                try {
+                    long i;
+                    i = Long.parseLong(s.trim());
+                    if (i <= 0)
+                        throw new NullPointerException();
+                    albumsCount=i;
+                    return 1;
+                } catch (NullPointerException | InputMismatchException | NumberFormatException e) {
+                    System.out.println("Количество альбомов должно быть целым положительным числом. Повторите ввод");
+                    return -1;
+                }
+            };
+            if(db.chat(input)>0)
                 success=true;
-            } catch (NullPointerException | InputMismatchException | NumberFormatException e) {
-                System.out.println("Данные некорректны. Повторите ввод ещё раз");
-            }
         }
         success=false;
         System.out.println("Пожалуста, введите дату создания группы в формате ДД.ММ.ГГГГ");
 
         while(!success) {
-            try {
-                sdf.setLenient(false);
-                String line = input.nextLine().trim();
-                if(line.length()!=0) {
-                    establishmentDate = sdf.parse(line);
+            DialogBox db = s -> {
+                try {
+                    sdf.setLenient(false);
+                    String line = s.trim();
+                    if(line.length()!=0) {
+                        establishmentDate = sdf.parse(line);
+                    }
+                    else
+                        establishmentDate=null;
+                    return 1;
+                } catch (ParseException e) {
+                    System.out.println("Неверный формат даты создания. Повторите ввод даты в формате ДД.ММ.ГГГГ");
+                    return -1;
                 }
-                else
-                    establishmentDate=null;
+            };
+            if(db.chat(input)>0)
                 success=true;
-            } catch (ParseException e) {
-                System.out.println("Данные некорректны. Повторите ввод ещё раз");
-            }
         }
         success=false;
         System.out.println("Пожалуйста, выберите музыкальный жанр из представленных: ");
         while(!success) {
-            list();
-            try {
-                genre = MusicGenre.valueOf(input.nextLine().trim().toUpperCase());
+            MusicGenre.list();
+            DialogBox db = s -> {
+                try {
+                    genre = MusicGenre.valueOf(s.trim().toUpperCase());
+                    return 1;
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Жанр введён неверно");
+                    System.out.println("Пожалуйста, выберите музыкальный жанр из представленных: ");
+                    return -1;
+                }
+            };
+            if(db.chat(input)>0)
                 success=true;
-            } catch (IllegalArgumentException e) {
-                System.out.println("Данные некорректны. Повторите ввод ещё раз");
-            }
         }
+        bestAlbum=new Album();
         bestAlbum.fromConsole();
         if(bestAlbum.getName()==null){
             bestAlbum=null;
         }
         if(id==null) {
-            id = ++number;
+           while(ids.contains(number)) {
+               number++;
+               if(number==Integer.MAX_VALUE)
+                   number=1;
+           }
+           id=number;
             ids.add(id);
         }
     }
 
     /**
-     * Создаёт класс MusicBand из потока BufferedReader reader
-     * @param reader
-     * @throws IOException
-     * @throws NullPointerException
-     * @throws InputMismatchException
-     * @throws ParseException
-     * @throws IllegalArgumentException
+     * Создаёт класс MusicBand
      */
-    public void fromFile(BufferedReader reader) throws IOException, NullPointerException, InputMismatchException, ParseException,IllegalArgumentException{
-        if(name!=null) {
-            name = reader.readLine();
+    public int fromFile(Vector<String>Contents, int i) throws NullPointerException{
+            name = Contents.get(i);
             name = name.trim();
             if (name.length() == 0) {
+                System.out.println("У группы должно быть имя");
                 throw new NullPointerException();
             }
-        }
-            coordinates.fromFile(reader);
-            numberOfParticipants = Integer.parseInt(reader.readLine().trim());
-            if (numberOfParticipants <= 0) {
+            i=coordinates.fromFile(Contents,i+1);
+            try {
+                if(Contents.get(i+1).length()==0)
+                    numberOfParticipants=null;
+                else {
+                    numberOfParticipants = Integer.parseInt(Contents.get(i + 1).trim());
+                    if (numberOfParticipants <= 0) {
+                        System.out.println("Количество участников не может быть неположительным числом");
+                        throw new NullPointerException();
+                    }
+                }
+            }
+            catch(NumberFormatException e){
+                System.out.println("Количество участников должно быть целым числом");
                 throw new NullPointerException();
             }
-            albumsCount = Long.parseLong(reader.readLine().trim());
-            if (albumsCount <= 0) {
+            try {
+                albumsCount = Long.parseLong(Contents.get(i + 2).trim());
+                if (albumsCount <= 0) {
+                    System.out.println("Количество альбомов не может быть неположительным числом");
+                    throw new NullPointerException();
+                }
+            }
+            catch (NumberFormatException e){
+                System.out.println("Количество альбомов должно быть целым числом");
                 throw new NullPointerException();
             }
             sdf.setLenient(false);
-            String line=reader.readLine().trim();
+            String line=Contents.get(i+3).trim();
             if(line.length()!=0)
-                establishmentDate = sdf.parse(line);
+                try {
+                    establishmentDate = sdf.parse(line);
+                }catch (ParseException e){
+                    System.out.println("Дата введена некорректно. Введите дату в формате ДД.ММ.ГГГГ");
+                    throw new NullPointerException();
+                }
             else
                 establishmentDate=null;
-            genre = MusicGenre.valueOf(reader.readLine().trim().toUpperCase());
-            bestAlbum.fromFile(reader);
+            try {
+                genre = MusicGenre.valueOf(Contents.get(i + 4).trim().toUpperCase());
+            }
+            catch(IllegalArgumentException e){
+                System.out.println("Неверно введён жанр. Выберите жанр из предложенных");
+                MusicGenre.list();
+                throw new NullPointerException();
+            }
+            i=bestAlbum.fromFile(Contents, i+5);
             if(bestAlbum.getName()==null)
                 bestAlbum=null;
-            if(id!=null) {
-                id = ++number;
+            if(id==null) {
+                while(ids.contains(number)) {
+                    number++;
+                    if(number==Integer.MAX_VALUE)
+                        number=1;
+                }
+                id=number;
                 ids.add(id);
             }
+            return i;
     }
 }

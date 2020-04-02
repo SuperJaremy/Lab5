@@ -12,7 +12,7 @@ public interface SearchID {
         int i=0;
         MusicBand mb= null;
         while(i<V.size()&&mb==null){
-            if(V.get(i).getID()!=id)
+            if(V.get(i).getId()!=id)
                 i++;
             else
                 mb=V.get(i);

@@ -28,7 +28,8 @@ public class SumOfNumberOfParticipants extends Command {
             System.out.println(sum);
         }
         else {
-            System.out.println("В команде не должно быть аргументов");
+            System.out.println("У команды "+name+" не должно быть аргументов");
+            describe();
             throw new NullPointerException();
         }
     }

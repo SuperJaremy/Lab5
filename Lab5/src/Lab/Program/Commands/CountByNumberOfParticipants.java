@@ -3,6 +3,8 @@ package Lab.Program.Commands;
 import Lab.Program.MusicBand;
 import Lab.Program.Work;
 
+import java.text.ParseException;
+
 /**
  * Считает количество элементов коллекции, значение поля numberOfParticipants, которых равно заданному
  */
@@ -21,11 +23,25 @@ public class CountByNumberOfParticipants extends Command {
 
     @Override
     public void act(Work work) {
-        int i=Integer.parseInt(work.getElement());
-        long count=0;
-        for(MusicBand j:work.vector)
-            if(j.getNumberOfParticipants()==i)
-                count++;
-        System.out.println(count);
+        if (work.getElement()!=null) {
+            try {
+                int i = Integer.parseInt(work.getElement());
+                long count = 0;
+                for (MusicBand j : work.vector)
+                    if (j.getNumberOfParticipants() == i)
+                        count++;
+                System.out.println(count);
+            }
+            catch (NumberFormatException e){
+                System.out.println("Аргументом команды "+ name +" должно быть число");
+                describe();
+                throw new NullPointerException();
+            }
+        }
+        else{
+            System.out.println("У команды "+name+" должен быть аргумент");
+            describe();
+            throw new NullPointerException();
+        }
     }
 }

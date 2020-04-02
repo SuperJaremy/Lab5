@@ -2,10 +2,6 @@ package Lab.Program.Commands;
 
 import Lab.Program.Work;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.InputMismatchException;
 
 /**
  * Заменяет элемент с заданным id элементом из файла
@@ -13,11 +9,23 @@ import java.util.InputMismatchException;
 public class FileUpdateID extends UpdateID implements SearchID{
     @Override
     public void act(Work work){
-        try{
-            BufferedReader reader =work.getReader();
-            int i=Integer.parseInt(work.getElement());
-            SearchID(work.vector,i).fromFile(reader);
-        }catch (IOException| NullPointerException| InputMismatchException| ParseException| IllegalArgumentException e){
+        if(work.getElement()!=null) {
+            try {
+                int i = Integer.parseInt(work.getElement());
+                if (SearchID(work.vector, i) != null){
+                    work.setCurrentLine(SearchID(work.vector, i).fromFile(work.getContents(), work.getCurrentLine()+1));
+                }
+                else{
+                    System.out.println("Элемент с id "+i+" не был найден");
+                    throw new NullPointerException();
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Аргумент команды "+name+" должен быть целым числом");
+                throw new NullPointerException();
+            }
+        }else{
+            System.out.println("У команды "+name+" должен быть аргумент");
+            describe();
             throw new NullPointerException();
         }
     }

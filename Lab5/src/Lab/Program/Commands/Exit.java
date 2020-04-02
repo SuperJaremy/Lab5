@@ -25,7 +25,8 @@ public class Exit extends Command {
             System.out.println("Выход из программы");
         }
         else {
-            System.out.println("В команде не должно быть аргументов");
+            System.out.println("У команды "+name+" не должно быть аргументов");
+            describe();
             throw new NullPointerException();
         }
     }

@@ -33,7 +33,8 @@ public class PrintFieldDescendingNumberOfParticipants extends Command {
             System.out.println("Все значения выведены");
         }
         else {
-            System.out.println("В команде не должно быть аргументов");
+            System.out.println("У команды "+name+ " не должно быть аргументов");
+            describe();
             throw new NullPointerException();
         }
     }

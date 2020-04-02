@@ -15,17 +15,23 @@ import java.util.InputMismatchException;
  */
 public class FileAddElement extends AddElement {
     @Override
-    public void act(Work work) {
-        if (FileTester.TestFileToRead(work.getPathOfScript())) {
-            try {
-                BufferedReader reader =work.getReader();
+    public void act(Work work) throws NullPointerException {
+        if(work.getElement()==null) {
+            if(work.vector.size()<Integer.MAX_VALUE) {
                 MusicBand mb = new MusicBand();
-                mb.fromFile(reader);
-                mb.setName(work.getElement());
+                work.setCurrentLine(mb.fromFile(work.getContents(), work.getCurrentLine() + 1));
                 work.vector.add(mb);
-            }catch (IOException| NullPointerException| InputMismatchException| ParseException| IllegalArgumentException e){
+            }
+            else{
+                System.out.println("Слишком много элементов в коллекции");
                 throw new NullPointerException();
             }
+        }
+        else {
+            System.out.println("У команды "+name+" не должно быть аргументов в этой же строке");
+            System.out.println("Значения полей объекта прописываются по одному в строке");
+            describe();
+            throw new NullPointerException();
         }
     }
 }

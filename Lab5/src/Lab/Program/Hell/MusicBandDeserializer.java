@@ -21,29 +21,64 @@ public class MusicBandDeserializer implements JsonDeserializer<MusicBand> {
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     @Override
     public MusicBand deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+        Integer id;
+        String name;
         JsonObject jsonObject= jsonElement.getAsJsonObject();
         JsonElement jsonId=jsonObject.get("id");
+        if(jsonId==JsonNull.INSTANCE)
+            id=null;
+        else
+            id=jsonId.getAsInt();
         JsonElement jsonName=jsonObject.get("name");
-        JsonElement jsonCoordinates=jsonObject.getAsJsonObject("coordinates");
-        Coordinates coord = gson.fromJson(jsonCoordinates,Coordinates.class);
+        if(jsonName==JsonNull.INSTANCE){
+            name=null;
+        }
+        else
+            name=jsonName.getAsString();
+        Coordinates coord;
+        JsonElement jsonCoordinates = jsonObject.get("coordinates");
+        coord = gson.fromJson(jsonCoordinates, Coordinates.class);
         JsonElement jsonCreationDate=jsonObject.get("creationDate");
         JsonElement jsonNumberOfParticipants=jsonObject.get("numberOfParticipants");
+        Integer numberOfParticipants;
+        if(jsonNumberOfParticipants==JsonNull.INSTANCE)
+            numberOfParticipants=null;
+        else
+            numberOfParticipants=jsonNumberOfParticipants.getAsInt();
         JsonElement jsonAlbumsCount=jsonObject.get("albumsCount");
         JsonElement jsonEstablishmentDate=jsonObject.get("establishmentDate");
         JsonElement jsonGenre=jsonObject.get("genre");
-        JsonElement jsonBestAlbum=jsonObject.getAsJsonObject("bestAlbum");
-        Album alb = gson.fromJson(jsonBestAlbum,Album.class);
+        MusicGenre mg;
+        try{
+            mg=MusicGenre.valueOf(jsonGenre.getAsString());
+        }
+        catch (IllegalArgumentException e){
+            mg=null;
+        }
+        Album alb;
+        JsonElement jsonBestAlbum = jsonObject.get("bestAlbum");
+        alb = gson.fromJson(jsonBestAlbum, Album.class);
         java.util.Date date;
         java.time.LocalDate localDate;
-        try {
-            date =sdf.parse(jsonEstablishmentDate.getAsString());
-            localDate=LocalDate.parse(jsonCreationDate.getAsString(),dateTimeFormatter);
-        } catch (ParseException| java.time.format.DateTimeParseException e) {
-            throw new NullPointerException();
+        if(jsonEstablishmentDate!=JsonNull.INSTANCE) {
+            try {
+                date = sdf.parse(jsonEstablishmentDate.getAsString());
+
+            } catch (ParseException e) {
+                throw new JsonSyntaxException("");
+            }
         }
-        MusicBand mb = new MusicBand(jsonId.getAsInt(),jsonName.getAsString(), coord,
-                localDate, jsonNumberOfParticipants.getAsInt(), jsonAlbumsCount.getAsLong(),
-                date, MusicGenre.valueOf(jsonGenre.getAsString()), alb);
+        else
+            date=null;
+        try{
+            localDate = LocalDate.parse(jsonCreationDate.getAsString(), dateTimeFormatter);
+        }
+        catch (java.time.format.DateTimeParseException e) {
+            localDate=null;
+        }
+        MusicBand mb = new MusicBand(id,name, coord,
+                localDate, numberOfParticipants, jsonAlbumsCount.getAsLong(),
+                date, mg , alb);
         return mb;
     }
 }
