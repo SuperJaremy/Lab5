@@ -117,6 +117,7 @@ public class Work {
     public void start() throws ExitException{
         Gson gson = new GsonBuilder().registerTypeAdapter(MusicBand.class,new MusicBandDeserializer()).create();
         if(!FileTester.TestFileToRead(pathOfJson)){
+            System.out.println("Перезапустите программу и введите абсолютный путь до программы в той же строке");
             inProcess=false;
         }
         else {

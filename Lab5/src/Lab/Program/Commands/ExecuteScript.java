@@ -33,6 +33,7 @@ public class ExecuteScript extends Command{
                     work.setInProcess(innerWork.getInProcess());
                     if (innerWork.getInProcess()) {
                         System.out.println("Скрипт " + innerWork.getPathOfScript() + " выполнен");
+                        work.getScripts().remove(work.getScripts().size()-1);
                     }
                 } else {
                     System.out.println("Рекурсия в скрипте:" + work.getPathOfScript());

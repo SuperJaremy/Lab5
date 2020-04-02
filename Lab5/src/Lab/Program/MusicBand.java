@@ -134,7 +134,7 @@ public class MusicBand implements Comparable<MusicBand> {
     public Integer getNumberOfParticipants(){
         return numberOfParticipants;
     }
-    public int getId(){
+    public Integer getId(){
         return id;
     }
 
@@ -178,8 +178,14 @@ public class MusicBand implements Comparable<MusicBand> {
     public int compareTo(MusicBand musicBand) {
         if(!this.equals(musicBand)) {
             Integer a,b;
-            a = Objects.requireNonNullElse(this.numberOfParticipants, 0);
-            b = Objects.requireNonNullElse(musicBand.numberOfParticipants, 0);
+            if(this.numberOfParticipants==null)
+                a=0;
+            else
+                a=this.numberOfParticipants;
+            if(musicBand.numberOfParticipants==null)
+                b=0;
+            else
+                b=musicBand.numberOfParticipants;
             return a.compareTo(b);
         }
         return 0;
@@ -313,7 +319,7 @@ public class MusicBand implements Comparable<MusicBand> {
                 success=true;
         }
         success=false;
-        System.out.println("Пожалуста, введите дату создания группы в формате ДД.ММ.ГГГГ");
+        System.out.println("Пожалуйста, введите дату создания группы в формате ДД.ММ.ГГГГ");
         System.out.println(nullField);
         while(!success) {
             DialogBox db = s -> {

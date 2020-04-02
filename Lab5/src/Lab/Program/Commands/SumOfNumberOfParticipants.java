@@ -24,7 +24,9 @@ public class SumOfNumberOfParticipants extends Command {
         if(work.getElement()==null) {
             long sum = 0;
             for (MusicBand i : work.vector)
-                sum += i.getNumberOfParticipants();
+                if(!(i.getNumberOfParticipants()==null))
+                    sum += i.getNumberOfParticipants();
+
             System.out.println(sum);
         }
         else {

@@ -6,7 +6,7 @@ import Lab.Program.Work;
  * Заменяет элемент коллекции с заданным id
  */
 public class UpdateID extends Command implements SearchID{
-    protected final String name = "update_id";
+    protected final String name = "update";
     protected final String description = "обновить значение элемента коллекции, id которого равен заданному";
     @Override
     protected void describe() {
