@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.InputMismatchException;
 
 /**
- * Добавляет элемент из файла в коллекцию, если он больше остальных
+ * Добавляет элемент из построчного представления в коллекцию, если он больше остальных
  */
 public class FileAddIfMax extends AddIfMax {
     @Override

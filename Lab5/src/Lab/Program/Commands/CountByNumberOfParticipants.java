@@ -3,10 +3,9 @@ package Lab.Program.Commands;
 import Lab.Program.MusicBand;
 import Lab.Program.Work;
 
-import java.text.ParseException;
 
 /**
- * Считает количество элементов коллекции, значение поля numberOfParticipants, которых равно заданному
+ * Считает количество элементов коллекции, значение поля numberOfParticipants, которых равно заданному, и выводит результат в консоль
  */
 public class CountByNumberOfParticipants extends Command {
     private final String name="count_by_number_of_participants";

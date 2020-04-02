@@ -4,7 +4,7 @@ import java.io.File;
 import java.nio.file.Path;
 
 /**
- * Класс для проверки атрибутов файла
+ * Класс для проверки файла на существование, чтение и запись
  */
 public class FileTester {
     static boolean TestFileToExist(Path path){

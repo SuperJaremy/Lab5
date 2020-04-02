@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.util.InputMismatchException;
 
 /**
- * Добавляет элемент из файла в коллекцию
+ * Добавляет файл в коллекцию из построчного представления полей
  */
 public class FileAddElement extends AddElement {
     @Override

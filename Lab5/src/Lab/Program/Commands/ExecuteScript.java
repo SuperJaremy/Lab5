@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
- * Выполняет скрипт из заданного файла
+ * Посторочно выполняет скрипт из заданного файла
  */
 public class ExecuteScript extends Command{
     private final String name="execute_script";

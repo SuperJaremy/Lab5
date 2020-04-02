@@ -26,9 +26,10 @@ public class PrintFieldDescendingNumberOfParticipants extends Command {
     public void act(Work work) throws NullPointerException {
         if(work.getElement()==null) {
             Vector<MusicBand> V = work.vector;
-            Collections.sort(V, Collections.reverseOrder());
+            V.sort(Collections.reverseOrder());
             for (MusicBand i : V) {
-                System.out.println(i.getNumberOfParticipants());
+                if(!(i.getNumberOfParticipants()==null))
+                    System.out.println(i.getNumberOfParticipants());
             }
             System.out.println("Все значения выведены");
         }

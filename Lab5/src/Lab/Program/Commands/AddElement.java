@@ -4,7 +4,7 @@ import Lab.Program.MusicBand;
 import Lab.Program.Work;
 
 /**
- * Добавляет элемент в коллекцию из командной строки
+ * Добавляет элемент в коллекцию из консоли
  */
 public class AddElement extends Command {
     protected final String name="add";

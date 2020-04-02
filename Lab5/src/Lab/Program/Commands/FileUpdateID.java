@@ -4,7 +4,7 @@ import Lab.Program.Work;
 
 
 /**
- * Заменяет элемент с заданным id элементом из файла
+ * Заменяет элемент с заданным id элементом из построчного представления
  */
 public class FileUpdateID extends UpdateID implements SearchID{
     @Override

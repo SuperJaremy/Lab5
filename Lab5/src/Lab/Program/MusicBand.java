@@ -24,7 +24,7 @@ public class MusicBand implements Comparable<MusicBand> {
     private java.util.Date establishmentDate;
     private MusicGenre genre;
     private Album bestAlbum;
-    private static int number = 0;
+    private static int number = 1;
     private static Vector<Integer> ids = new Vector<>();
     private SimpleDateFormat sdf= new SimpleDateFormat("dd.MM.yyyy");
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -131,7 +131,7 @@ public class MusicBand implements Comparable<MusicBand> {
        }
        ids.add(id);
     }
-    public int getNumberOfParticipants(){
+    public Integer getNumberOfParticipants(){
         return numberOfParticipants;
     }
     public int getId(){
@@ -177,7 +177,10 @@ public class MusicBand implements Comparable<MusicBand> {
     @Override
     public int compareTo(MusicBand musicBand) {
         if(!this.equals(musicBand)) {
-            return this.numberOfParticipants.compareTo(musicBand.numberOfParticipants);
+            Integer a,b;
+            a = Objects.requireNonNullElse(this.numberOfParticipants, 0);
+            b = Objects.requireNonNullElse(musicBand.numberOfParticipants, 0);
+            return a.compareTo(b);
         }
         return 0;
     }
@@ -224,6 +227,7 @@ public class MusicBand implements Comparable<MusicBand> {
          * Создаёт класс MusicBand из стандартного потока ввода
          */
         Scanner input = new Scanner(System.in);
+        String nullField="Это поле может быть пустым. Нажмите Enter, чтобы оставить поле пустым";
         boolean success = false;
             System.out.println("Пожалуйста, введите имя");
             while (!success) {
@@ -266,10 +270,11 @@ public class MusicBand implements Comparable<MusicBand> {
         coordinates.fromConsole();
         success = false;
         System.out.println("Пожалуйста, введите количество участников");
+        System.out.println(nullField);
         while (!success) {
             DialogBox db = s -> {
                 try {
-                    Integer i;
+                    int i;
                     if(s.length()==0)
                         numberOfParticipants=null;
                     else {
@@ -280,7 +285,7 @@ public class MusicBand implements Comparable<MusicBand> {
                     }
                     return 1;
                 } catch (NullPointerException | NumberFormatException e) {
-                    System.out.println("Количество участников должно быть целым положительным числом. Повторите ввод");
+                    System.out.println("Количество участников должно быть целым положительным числом. Повторите ввод или оставьте поле пустым");
                     return -1;
                 }
             };
@@ -309,7 +314,7 @@ public class MusicBand implements Comparable<MusicBand> {
         }
         success=false;
         System.out.println("Пожалуста, введите дату создания группы в формате ДД.ММ.ГГГГ");
-
+        System.out.println(nullField);
         while(!success) {
             DialogBox db = s -> {
                 try {
@@ -322,7 +327,7 @@ public class MusicBand implements Comparable<MusicBand> {
                         establishmentDate=null;
                     return 1;
                 } catch (ParseException e) {
-                    System.out.println("Неверный формат даты создания. Повторите ввод даты в формате ДД.ММ.ГГГГ");
+                    System.out.println("Неверный формат даты создания. Повторите ввод даты в формате ДД.ММ.ГГГГ или оствьте поле пустым");
                     return -1;
                 }
             };
@@ -347,6 +352,8 @@ public class MusicBand implements Comparable<MusicBand> {
                 success=true;
         }
         bestAlbum=new Album();
+        System.out.println("Вспомните лучший альбом группы");
+        System.out.println(nullField);
         bestAlbum.fromConsole();
         if(bestAlbum.getName()==null){
             bestAlbum=null;
