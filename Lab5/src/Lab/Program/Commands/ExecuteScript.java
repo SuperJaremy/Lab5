@@ -3,8 +3,10 @@ package Lab.Program.Commands;
 import Lab.Program.FileTester;
 import Lab.Program.Work;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.Vector;
 
 /**
  * Посторочно выполняет скрипт из заданного файла
@@ -21,7 +23,6 @@ public class ExecuteScript extends Command{
     public String getName() {
         return name;
     }
-
     @Override
     public void act(Work work) throws NullPointerException, ExitException {
         if (work.getElement() != null) {
@@ -55,9 +56,14 @@ public class ExecuteScript extends Command{
                         if(i>-1)
                             success=true;
                         if(i>0){
+                            work.getScripts().add(Paths.get(work.getElement()).hashCode());
                             ScriptWork innerWork = new ScriptWork(work.vector, work.getPathOfJson().toString(), work);
                             innerWork.start();
                             work.setInProcess(innerWork.getInProcess());
+                            if (innerWork.getInProcess()) {
+                                System.out.println("Скрипт " + innerWork.getPathOfScript() + " выполнен");
+                                work.getScripts().remove(work.getScripts().size()-1);
+                            }
                         }
                     }
 
