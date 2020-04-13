@@ -60,7 +60,6 @@ class ScriptWork extends Work {
                             DialogBox db = s -> {
                                 if (s.equals("Y")) {
                                     System.out.println("Исправьте ошибку. Затем нажимте Enter для продожения");
-                                    input.nextLine();
                                     return 1;
                                 } else if (s.equals("N")) {
                                     currentLine++;
@@ -71,10 +70,13 @@ class ScriptWork extends Work {
                                 }
                             };
                             int i=db.chat(input);
-                            if(i>-1)
+                            if(i<0)
                                 success=true;
-                            if(i>1)
-                                correct=true;
+                            if(i>0) {
+                                input.nextLine();
+                                correct = true;
+                                success=true;
+                            }
                         }
                     }
                 }
