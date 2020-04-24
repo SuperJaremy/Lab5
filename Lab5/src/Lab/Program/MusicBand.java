@@ -385,6 +385,7 @@ public class MusicBand implements Comparable<MusicBand> {
                 System.out.println("У группы должно быть имя");
                 throw new NullPointerException();
             }
+            coordinates=new Coordinates();
             i=coordinates.fromFile(Contents,i+1);
             try {
                 if(Contents.get(i+1).length()==0)
@@ -431,6 +432,7 @@ public class MusicBand implements Comparable<MusicBand> {
                 MusicGenre.list();
                 throw new NullPointerException();
             }
+            bestAlbum=new Album();
             i=bestAlbum.fromFile(Contents, i+5);
             if(bestAlbum.getName()==null)
                 bestAlbum=null;

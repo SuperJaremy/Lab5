@@ -23,7 +23,7 @@ class ScriptWork extends Work {
         this.history = work.getHistory();
         this.Commands.replace("add", new FileAddElement());
         this.Commands.replace("add_if_max", new FileAddIfMax());
-        this.Commands.replace("update_id", new FileUpdateID());
+        this.Commands.replace("update", new FileUpdateID());
         this.Scripts = work.getScripts();
     }
     @Override
